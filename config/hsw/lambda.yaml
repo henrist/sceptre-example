@@ -1,0 +1,14 @@
+template_path: lambda.yaml
+hooks:
+  before_create:
+    - !sceptre_s3_upload ./templates/lambda
+  before_update:
+    - !sceptre_s3_upload ./templates/lambda
+parameters:
+  BucketName: !stack_output hsw/bucket.yaml::BucketName
+  CodeS3Bucket: !stack_output hsw/bucket-for-code.yaml::BucketName
+  CodeS3Key: !sceptre_s3_key ./templates/lambda
+sceptre_user_data:
+  Code:
+    # Needed for sceptre s3 plugin.
+    S3Bucket: !stack_output hsw/bucket-for-code.yaml::BucketName
